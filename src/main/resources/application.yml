@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: routes-microservice
+  datasource:
+    hikari:
+      jdbc-url: ${DATABASE_URL:}
+      username: ${DATABASE_USER:routes}
+      password: ${DATABASE_PASSWORD:routes123}
+      driver-class-name: ""
+server:
+  port: ${SERVER_PORT:8080}
+logging:
+  level:
+    sql: debug
+    web: debug
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

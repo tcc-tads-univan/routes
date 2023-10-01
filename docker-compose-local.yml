@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:latest
+    hostname: routes-db
+    volumes:
+      - ./config/schemas.sql:/docker-entrypoint-initdb.d/schemas.sql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: routes
+      POSTGRES_PASSWORD: routes123
+      POSTGRES_DB: routesdb
