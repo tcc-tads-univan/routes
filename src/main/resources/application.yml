@@ -24,3 +24,7 @@ management:
     web:
       exposure:
         include: "*"
+
+routes:
+  keys:
+    google-maps: "API_KEY_AQUI"
