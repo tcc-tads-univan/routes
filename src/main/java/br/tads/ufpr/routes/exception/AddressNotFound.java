@@ -8,7 +8,6 @@ public class AddressNotFound extends RuntimeException {
     public AddressNotFound() {
         super("No address was found");
     }
-
     public AddressNotFound(String message) {
         super(message);
     }
