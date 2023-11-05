@@ -37,4 +37,4 @@ rabbit:
 
 routes:
   keys:
-    google-maps: "API_KEY_AQUI"
+    google-maps: ${MAPS_KEY}

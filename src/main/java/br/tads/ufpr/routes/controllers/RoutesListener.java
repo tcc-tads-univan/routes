@@ -1,7 +1,8 @@
 package br.tads.ufpr.routes.controllers;
 
-import br.tads.ufpr.routes.model.dto.SaveStudentAddressEvent;
+import br.tads.ufpr.routes.model.dto.SaveUserAddressEvent;
 import br.tads.ufpr.routes.services.AddressService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -20,8 +21,8 @@ public class RoutesListener {
     }
 
     @RabbitHandler
-    public void saveStudentAddress(@Payload SaveStudentAddressEvent event) {
+    public void saveStudentAddress(@Payload SaveUserAddressEvent event) {
         log.info("{}", event);
-        this.service.saveStudentAddress(event);
+        this.service.saveUserAddress(event);
     }
 }

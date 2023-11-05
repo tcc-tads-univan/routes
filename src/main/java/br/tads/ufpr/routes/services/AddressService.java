@@ -1,10 +1,10 @@
 package br.tads.ufpr.routes.services;
 
 import br.tads.ufpr.routes.exception.AddressNotFound;
-import br.tads.ufpr.routes.model.dto.SaveStudentAddressEvent;
+import br.tads.ufpr.routes.model.dto.SaveUserAddressEvent;
 import br.tads.ufpr.routes.model.dto.SearchAddressResponse;
 import br.tads.ufpr.routes.model.entity.UserAddress;
-import br.tads.ufpr.routes.model.mapper.UserAddressMapper;
+import br.tads.ufpr.routes.model.mapper.StudentAddressMapper;
 import br.tads.ufpr.routes.repository.UserAddressRepository;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlaceAutocompleteRequest;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -59,23 +58,17 @@ public class AddressService {
         }
     }
 
-    public void saveStudentAddress(SaveStudentAddressEvent event) {
+    public void saveUserAddress(SaveUserAddressEvent event) {
         try {
-            UserAddress userAddress = UserAddressMapper.eventToEntity(event);
-            this.repository.save(userAddress);
-            log.info("saveStudentAddress: {}", userAddress);
+            this.repository
+                    .findByUserId(event.userId())
+                    .ifPresent(userAddress -> this.repository.deleteById(userAddress.getId()));
+
+            UserAddress entity = StudentAddressMapper.eventToEntity(event);
+            this.repository.save(entity);
+            log.info("saveStudentAddress: {}", entity);
         } catch (Exception e) {
             log.error("saveStudentAddress", e);
         }
-    }
-
-    public List<String> calculateRoutesPreview(String placeId, Long driverId) {
-        List<String> placeIds = new LinkedList<>();
-
-        this.repository.findAllByDriverId(driverId)
-                .forEach(userAddress -> placeIds.add(userAddress.getPlaceId()));
-
-        placeIds.add(placeId);
-        return placeIds;
     }
 }

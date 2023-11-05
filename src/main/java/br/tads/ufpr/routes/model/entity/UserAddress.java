@@ -8,13 +8,12 @@ public class UserAddress {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-
     @Column(unique = true, nullable = false)
-    private Long studentId;
+    private Long userId;
     @Column(nullable = false)
     private String placeId;
     @Column
-    private Long driverId;
+    private Long relatedTo = null;
 
     public Long getId() {
         return id;
@@ -24,12 +23,12 @@ public class UserAddress {
         this.id = id;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getPlaceId() {
@@ -40,11 +39,11 @@ public class UserAddress {
         this.placeId = placeId;
     }
 
-    public Long getDriverId() {
-        return driverId;
+    public Long getRelatedTo() {
+        return relatedTo;
     }
 
-    public void setDriverId(Long driverId) {
-        this.driverId = driverId;
+    public void setRelatedTo(Long relatedTo) {
+        this.relatedTo = relatedTo;
     }
 }
