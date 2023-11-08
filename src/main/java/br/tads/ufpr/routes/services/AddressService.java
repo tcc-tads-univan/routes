@@ -1,6 +1,7 @@
 package br.tads.ufpr.routes.services;
 
 import br.tads.ufpr.routes.exception.AddressNotFound;
+import br.tads.ufpr.routes.model.dto.RouteDirectionsResult;
 import br.tads.ufpr.routes.model.dto.SaveUserAddressEvent;
 import br.tads.ufpr.routes.model.dto.SearchAddressResponse;
 import br.tads.ufpr.routes.model.entity.UserAddress;
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AddressService {
@@ -36,7 +38,7 @@ public class AddressService {
         PlaceAutocompleteRequest.SessionToken sessionToken = new PlaceAutocompleteRequest.SessionToken();
 
         try {
-            log.info("Searching address: {}", input);
+            log.info("autocompletePredictions({})", input);
             AutocompletePrediction[] response = PlacesApi
                     .placeAutocomplete(geoApiContext, input, sessionToken)
                     .types(PlaceAutocompleteType.ADDRESS)
@@ -44,7 +46,7 @@ public class AddressService {
                     .components(ComponentFilter.country("br"))
                     .await();
 
-            log.info("Search for: {} - No. of results: {}", input, response.length);
+            log.info("autocompletePredictions({}) -> No. of results: {}", input, response.length);
             if (response.length == 0) {
                 throw new AddressNotFound();
             }
@@ -53,7 +55,7 @@ public class AddressService {
                     .map(r -> new SearchAddressResponse(r.placeId, r.description))
                     .toList();
         } catch (Exception e) {
-            log.error("Error searching for address: {}", input, e);
+            log.error("Error @autocompletePredictions({})", input, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ("Error searching for address: " + input), e);
         }
     }
@@ -66,9 +68,25 @@ public class AddressService {
 
             UserAddress entity = StudentAddressMapper.eventToEntity(event);
             this.repository.save(entity);
-            log.info("saveStudentAddress: {}", entity);
+            log.info("Saved Student Address: {}", entity);
         } catch (Exception e) {
-            log.error("saveStudentAddress", e);
+            log.error("saveStudentAddress({})", event, e);
         }
+    }
+
+    public RouteDirectionsResult findRouteDirections(Long driverId, Long studentId) {
+        log.info("findRouteDirections({}, {})", driverId, studentId);
+        UserAddress garageAddress = this.repository.findByUserId(driverId).orElseThrow(AddressNotFound::new);
+        String destination = garageAddress.getPlaceId();
+
+        List<String> waypoints = this.repository.findAllByRelatedTo(driverId)
+                .stream()
+                .map(UserAddress::getPlaceId)
+                .collect(Collectors.toList());
+
+        UserAddress studentAddress = this.repository.findByUserId(studentId).orElseThrow(AddressNotFound::new);
+        waypoints.add(studentAddress.getPlaceId());
+
+        return new RouteDirectionsResult(waypoints, destination);
     }
 }

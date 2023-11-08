@@ -30,7 +30,6 @@ management:
       exposure:
         include: "*"
 
-
 rabbit:
   listener:
     queue: ${LISTENER_QUEUE:routes.listener.queue}
