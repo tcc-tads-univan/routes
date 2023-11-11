@@ -14,7 +14,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   rabbitmq:
-    host: localhost
+    host: ${RABBIT_HOST:localhost}
     password: guest
     username: guest
     port: 5672
@@ -22,8 +22,9 @@ server:
   port: ${SERVER_PORT:8081}
 logging:
   level:
-    sql: debug
-    web: debug
+    sql: info
+    web: info
+    root: info
 management:
   endpoints:
     web:
