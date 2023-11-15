@@ -13,7 +13,7 @@ public class RabbitClassMapper {
     @Bean
     public DefaultClassMapper classMapper() {
         Map<String, Class<?>> idClassMapping = new HashMap<>();
-        idClassMapping.put("saveUserMessage", SaveUserAddressEvent.class);
+        idClassMapping.put("saveUserAddress", SaveUserAddressEvent.class);
 
         DefaultClassMapper classMapper = new DefaultClassMapper();
         classMapper.setIdClassMapping(idClassMapping);
