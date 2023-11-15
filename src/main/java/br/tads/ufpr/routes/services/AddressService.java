@@ -2,7 +2,7 @@ package br.tads.ufpr.routes.services;
 
 import br.tads.ufpr.routes.exception.AddressNotFound;
 import br.tads.ufpr.routes.model.dto.RouteDirectionsResult;
-import br.tads.ufpr.routes.model.dto.SaveUserAddressEvent;
+import br.tads.ufpr.routes.model.dto.SaveUserAddressEventData;
 import br.tads.ufpr.routes.model.dto.SearchAddressResponse;
 import br.tads.ufpr.routes.model.entity.UserAddress;
 import br.tads.ufpr.routes.model.mapper.StudentAddressMapper;
@@ -60,7 +60,7 @@ public class AddressService {
         }
     }
 
-    public void saveUserAddress(SaveUserAddressEvent event) {
+    public void saveUserAddress(SaveUserAddressEventData event) {
         try {
             this.repository
                     .findByUserId(event.userId())
