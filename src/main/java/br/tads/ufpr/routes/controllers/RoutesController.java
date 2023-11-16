@@ -24,7 +24,7 @@ public class RoutesController {
 
     @GetMapping("directions")
     public ResponseEntity<RouteDirectionsResult> findRouteDirections(@RequestParam Long driverId,
-                                                                     @RequestParam Long studentId) {
+                                                                     @RequestParam List<Long> studentId) {
         return ResponseEntity.ok(this.addressService.findRouteDirections(driverId, studentId));
     }
 }

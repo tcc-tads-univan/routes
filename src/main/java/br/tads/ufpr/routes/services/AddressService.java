@@ -74,8 +74,8 @@ public class AddressService {
         }
     }
 
-    public RouteDirectionsResult findRouteDirections(Long driverId, Long studentId) {
-        log.info("findRouteDirections({}, {})", driverId, studentId);
+    public RouteDirectionsResult findRouteDirections(Long driverId, List<Long> studentIds) {
+        log.info("findRouteDirections({}, {})", driverId, studentIds);
         UserAddress garageAddress = this.repository.findByUserId(driverId).orElseThrow(AddressNotFound::new);
         String destination = garageAddress.getPlaceId();
 
@@ -84,8 +84,10 @@ public class AddressService {
                 .map(UserAddress::getPlaceId)
                 .collect(Collectors.toList());
 
-        UserAddress studentAddress = this.repository.findByUserId(studentId).orElseThrow(AddressNotFound::new);
-        waypoints.add(studentAddress.getPlaceId());
+        studentIds.forEach(studentId -> {
+            UserAddress studentAddress = this.repository.findByUserId(studentId).orElseThrow(AddressNotFound::new);
+            waypoints.add(studentAddress.getPlaceId());
+        });
 
         return new RouteDirectionsResult(waypoints, destination);
     }
