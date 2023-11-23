@@ -4,6 +4,7 @@ import br.tads.ufpr.routes.exception.AddressNotFound;
 import br.tads.ufpr.routes.model.dto.RouteDirectionsResult;
 import br.tads.ufpr.routes.model.dto.SaveUserAddressEventData;
 import br.tads.ufpr.routes.model.dto.SearchAddressResponse;
+import br.tads.ufpr.routes.model.dto.Waypoint;
 import br.tads.ufpr.routes.model.entity.UserAddress;
 import br.tads.ufpr.routes.model.mapper.StudentAddressMapper;
 import br.tads.ufpr.routes.repository.UserAddressRepository;
@@ -79,14 +80,14 @@ public class AddressService {
         UserAddress garageAddress = this.repository.findByUserId(driverId).orElseThrow(AddressNotFound::new);
         String destination = garageAddress.getPlaceId();
 
-        List<String> waypoints = this.repository.findAllByRelatedTo(driverId)
+        List<Waypoint> waypoints = this.repository.findAllByRelatedTo(driverId)
                 .stream()
-                .map(UserAddress::getPlaceId)
+                .map(userAddress -> new Waypoint(userAddress.getUserId(), userAddress.getPlaceId()))
                 .collect(Collectors.toList());
 
         studentIds.forEach(studentId -> {
             UserAddress studentAddress = this.repository.findByUserId(studentId).orElseThrow(AddressNotFound::new);
-            waypoints.add(studentAddress.getPlaceId());
+            waypoints.add(new Waypoint(studentId, studentAddress.getPlaceId()));
         });
 
         return new RouteDirectionsResult(waypoints, destination);
